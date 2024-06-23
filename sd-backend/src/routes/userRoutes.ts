@@ -32,10 +32,10 @@ router.post("/user", async (req, res) => {
             sex,
         });
 
-        await user.save();
+        // await user.save();
         await sendMessageToKafka("user_created", user);
 
-        console.log("<$> Usuário criado:", user);
+        console.log("<$> Usuário criado [no kafka]:", user);
 
         res.status(201).send(user);
     } catch (error) {

@@ -6,6 +6,7 @@ const processUserCreated = async (message: any) => {
     const userData = JSON.parse(message.value.toString());
     const user = new User(userData);
     await user.save();
+    console.log('<$> Usuário criado [no banco]:', user);
 };
 
 const processUserUpdated = async (message: any) => {
