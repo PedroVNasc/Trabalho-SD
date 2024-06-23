@@ -1,61 +1,151 @@
-import { Router } from "express";
-import Doctor from "../models/Doctor";
+import express from "express";
+import mongoose from "mongoose";
+import Doctor from "../models/Doctor"; // Supondo que o modelo Doctor esteja em um arquivo models/Doctor
 
-const router = Router();
+const router = express.Router();
 
-// POST /doctor
+// POST /doctor - Criação de um novo médico
 router.post("/doctor", async (req, res) => {
     console.log("# [POST] /doctor");
 
     try {
-        // What is happening?
-        console.log("<&> data received:", req.body);
+        console.log("<&> Dados recebidos:", req.body);
 
-        // Extracting useful information from the request body
-        const { id } = req.body;
+        const {
+            id,
+            name,
+            email,
+            phone,
+            address,
+            city,
+            state,
+            zipCode,
+            specialty,
+            licenseNumber,
+            clinic,
+        } = req.body;
 
-        // Creating a new doctor and then saving it to the database
-        const doctor = new Doctor({ id });
+        const doctor = new Doctor({
+            id,
+            name,
+            email,
+            phone,
+            address,
+            city,
+            state,
+            zipCode,
+            specialty,
+            licenseNumber,
+            clinic,
+        });
+
         await doctor.save();
 
-        // Tell the operator about the success
-        console.log("<$> Doctor created:", doctor);
+        console.log("<$> Médico criado:", doctor);
 
-        // Tell the client about the success
         res.status(201).send(doctor);
     } catch (error) {
-        // Tell the operator about the error
-        console.error("<!> Error creating doctor:", error);
-
-        // Tell the client about the error
+        console.error("<!> Erro ao criar médico:", error);
         res.status(400).send(error);
     }
 
-    console.log("\n"); // Just to make the logs more readable
+    console.log("\n");
 });
 
-// GET /doctors
-router.get("/doctors", async (req, res) => {
-    console.log("# [GET] /doctors");
+// GET /doctor/:id - Obter informações de um médico específico
+router.get("/doctor/:id", async (req, res) => {
+    console.log("# [GET] /doctor/:id");
 
     try {
-        // Retrieving all doctors from the database
-        const doctors = await Doctor.find();
+        const doctor = await Doctor.findById(req.params.id).populate("clinic").exec();
 
-        // Tell the operator about the success
-        console.log("<$> Doctors retrieved:", doctors);
+        if (!doctor) {
+            console.error("<!> Médico não encontrado com id:", req.params.id);
+            return res.status(404).send({ error: "Médico não encontrado" });
+        }
 
-        // Tell the client about the success
-        res.status(200).send(doctors);
+        console.log("<$> Médico encontrado:", doctor);
+        res.status(200).send(doctor);
     } catch (error) {
-        // Tell the operator about the error
-        console.error("<!> Error retrieving doctors:", error);
-
-        // Tell the client about the error
-        res.status(500).send(error);
+        console.error("<!> Erro ao obter médico:", error);
+        res.status(400).send(error);
     }
 
-    console.log("\n"); // Just to make the logs more readable
+    console.log("\n");
+});
+
+// PUT /doctor/:id - Atualizar informações de um médico específico
+router.put("/doctor/:id", async (req, res) => {
+    console.log("# [PUT] /doctor/:id");
+
+    try {
+        console.log("<&> Dados recebidos para atualização:", req.body);
+
+        const {
+            name,
+            email,
+            phone,
+            address,
+            city,
+            state,
+            zipCode,
+            specialty,
+            licenseNumber,
+            clinic,
+        } = req.body;
+
+        const doctor = await Doctor.findByIdAndUpdate(
+            req.params.id,
+            {
+                name,
+                email,
+                phone,
+                address,
+                city,
+                state,
+                zipCode,
+                specialty,
+                licenseNumber,
+                clinic,
+            },
+            { new: true, runValidators: true }
+        );
+
+        if (!doctor) {
+            console.error("<!> Médico não encontrado com id:", req.params.id);
+            return res.status(404).send({ error: "Médico não encontrado" });
+        }
+
+        console.log("<$> Médico atualizado:", doctor);
+        res.status(200).send(doctor);
+    } catch (error) {
+        console.error("<!> Erro ao atualizar médico:", error);
+        res.status(400).send(error);
+    }
+
+    console.log("\n");
+});
+
+// DELETE /doctor/:id - Deletar um médico específico
+router.delete("/doctor/:id", async (req, res) => {
+    console.log("# [DELETE] /doctor/:id");
+
+    try {
+        const doctor = await Doctor.findByIdAndDelete(req.params.id);
+
+        if (!doctor) {
+            console.error("<!> Médico não encontrado com id:", req.params.id);
+            return res.status(404).send({ error: "Médico não encontrado" });
+        }
+
+        console.log("<$> Médico deletado:", doctor);
+        res.status(200).send(doctor);
+    } catch (error) {
+        console.error("<!> Erro ao deletar médico:", error);
+        res.status(400).send(error);
+    }
+
+    console.log("\n");
 });
 
 export default router;

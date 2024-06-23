@@ -1,61 +1,184 @@
-import { Router } from "express";
-import Medicine from "../models/Medicine";
+import express from "express";
+import mongoose from "mongoose";
+import Medicine from "../models/Medicine"; // Importando o modelo Medicine de ../models/
 
-const router = Router();
+const router = express.Router();
 
-// POST /medicine
+// POST /medicine - Criação de um novo medicamento
 router.post("/medicine", async (req, res) => {
     console.log("# [POST] /medicine");
 
     try {
-        // What is happening?
-        console.log("<&> data received:", req.body);
+        console.log("<&> Dados recebidos:", req.body);
 
-        // Extracting useful information from the request body
-        const { id, label } = req.body;
+        const {
+            name,
+            genericName,
+            brandName,
+            dosageForm,
+            strength,
+            manufacturer,
+            expiryDate,
+            batchNumber,
+            indications,
+            contraindications,
+            sideEffects,
+            storageConditions,
+            price,
+            prescriptionRequired,
+            quantity,
+        } = req.body;
 
-        // Creating a new medicine and then saving it to the database
-        const medicine = new Medicine({ id, label });
+        const medicine = new Medicine({
+            name,
+            genericName,
+            brandName,
+            dosageForm,
+            strength,
+            manufacturer,
+            expiryDate,
+            batchNumber,
+            indications,
+            contraindications,
+            sideEffects,
+            storageConditions,
+            price,
+            prescriptionRequired,
+            quantity,
+        });
+
         await medicine.save();
 
-        // Tell the operator about the success
-        console.log("<$> Medicine created:", medicine);
+        console.log("<$> Medicamento criado:", medicine);
 
-        // Tell the client about the success
         res.status(201).send(medicine);
     } catch (error) {
-        // Tell the operator about the error
-        console.error("<!> Error creating medicine:", error);
-
-        // Tell the client about the error
+        console.error("<!> Erro ao criar medicamento:", error);
         res.status(400).send(error);
     }
 
-    console.log("\n"); // Just to make the logs more readable
+    console.log("\n");
 });
 
-// GET /medicines
-router.get("/medicines", async (req, res) => {
-    console.log("# [GET] /medicines");
+// GET /medicine/:id - Obter informações de um medicamento específico
+router.get("/medicine/:id", async (req, res) => {
+    console.log("# [GET] /medicine/:id");
 
     try {
-        // Retrieving all medicines from the database
-        const medicines = await Medicine.find();
+        const medicine = await Medicine.findById(req.params.id).exec();
 
-        // Tell the operator about the success
-        console.log("<$> Medicines retrieved:", medicines);
+        if (!medicine) {
+            console.error(
+                "<!> Medicamento não encontrado com id:",
+                req.params.id
+            );
+            return res
+                .status(404)
+                .send({ error: "Medicamento não encontrado" });
+        }
 
-        // Tell the client about the success
-        res.status(200).send(medicines);
+        console.log("<$> Medicamento encontrado:", medicine);
+        res.status(200).send(medicine);
     } catch (error) {
-        // Tell the operator about the error
-        console.error("<!> Error retrieving medicines:", error);
-
-        // Tell the client about the error
-        res.status(500).send(error);
+        console.error("<!> Erro ao obter medicamento:", error);
+        res.status(400).send(error);
     }
 
-    console.log("\n"); // Just to make the logs more readable
+    console.log("\n");
+});
+
+// PUT /medicine/:id - Atualizar informações de um medicamento específico
+router.put("/medicine/:id", async (req, res) => {
+    console.log("# [PUT] /medicine/:id");
+
+    try {
+        console.log("<&> Dados recebidos para atualização:", req.body);
+
+        const {
+            name,
+            genericName,
+            brandName,
+            dosageForm,
+            strength,
+            manufacturer,
+            expiryDate,
+            batchNumber,
+            indications,
+            contraindications,
+            sideEffects,
+            storageConditions,
+            price,
+            prescriptionRequired,
+            quantity,
+        } = req.body;
+
+        const medicine = await Medicine.findByIdAndUpdate(
+            req.params.id,
+            {
+                name,
+                genericName,
+                brandName,
+                dosageForm,
+                strength,
+                manufacturer,
+                expiryDate,
+                batchNumber,
+                indications,
+                contraindications,
+                sideEffects,
+                storageConditions,
+                price,
+                prescriptionRequired,
+                quantity,
+            },
+            { new: true, runValidators: true }
+        );
+
+        if (!medicine) {
+            console.error(
+                "<!> Medicamento não encontrado com id:",
+                req.params.id
+            );
+            return res
+                .status(404)
+                .send({ error: "Medicamento não encontrado" });
+        }
+
+        console.log("<$> Medicamento atualizado:", medicine);
+        res.status(200).send(medicine);
+    } catch (error) {
+        console.error("<!> Erro ao atualizar medicamento:", error);
+        res.status(400).send(error);
+    }
+
+    console.log("\n");
+});
+
+// DELETE /medicine/:id - Deletar um medicamento específico
+router.delete("/medicine/:id", async (req, res) => {
+    console.log("# [DELETE] /medicine/:id");
+
+    try {
+        const medicine = await Medicine.findByIdAndDelete(req.params.id);
+
+        if (!medicine) {
+            console.error(
+                "<!> Medicamento não encontrado com id:",
+                req.params.id
+            );
+            return res
+                .status(404)
+                .send({ error: "Medicamento não encontrado" });
+        }
+
+        console.log("<$> Medicamento deletado:", medicine);
+        res.status(200).send(medicine);
+    } catch (error) {
+        console.error("<!> Erro ao deletar medicamento:", error);
+        res.status(400).send(error);
+    }
+
+    console.log("\n");
 });
 
 export default router;

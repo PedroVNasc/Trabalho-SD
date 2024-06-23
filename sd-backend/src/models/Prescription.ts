@@ -3,18 +3,27 @@ import mongoose, { Schema, Document } from "mongoose";
 interface IPrescription extends Document {
     id: number;
     medicine: string;
-    patient: number;
-    doctor: number;
+    patient: string;
+    doctor: string;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
 
-const PrescriptionSchema: Schema = new Schema({
-    id: { type: Number, required: true },
-    medicine: { type: String, required: true },
-    patient: { type: Number, required: true },
-    doctor: { type: Number, required: true },
-});
+const PrescriptionSchema: Schema = new Schema(
+    {
+        id: { type: Number, required: true },
+        medicine: { type: Schema.Types.ObjectId, ref: "Medicine" },
+        patient: { type: Schema.Types.ObjectId, ref: "User" },
+        doctor: { type: Schema.Types.ObjectId, ref: "Doctor" },
+    },
+    {
+        timestamps: true,
+    }
+);
 
 const Prescription = mongoose.model<IPrescription>(
-    "Prescription", PrescriptionSchema
+    "Prescription",
+    PrescriptionSchema
 );
+
 export default Prescription;

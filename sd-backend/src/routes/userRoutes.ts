@@ -1,65 +1,121 @@
-// Importing express
-import { Router } from "express";
+import express from "express";
+import mongoose from "mongoose";
+import User from "../models/User"; // Importando o modelo User de ../models/
 
-// Importing the schema
-import User from "../models/User";
+const router = express.Router();
 
-// Creating a new router
-const router = Router();
-
-// POST /register
-router.post("/register", async (req, res) => {
-    console.log("# [POST] /register");
+// POST /user - Criação de um novo usuário
+router.post("/user", async (req, res) => {
+    console.log("# [POST] /user");
 
     try {
-        // What is happening?
-        console.log("<&> data received:", req.body);
+        console.log("<&> Dados recebidos:", req.body);
 
-        // Extracting useful information from the request body
-        const { name, email, password } = req.body;
+        const { CNS, name, birthdate, email, phone, password, sex } = req.body;
 
-        // Creating a new user and then saving it to the database
-        const user = new User({ name, email, password });
+        const user = new User({
+            CNS,
+            name,
+            birthdate,
+            email,
+            phone,
+            password,
+            sex,
+        });
+
         await user.save();
 
-        // Tell the operator about the success
-        console.log("<$> User created:", user);
+        console.log("<$> Usuário criado:", user);
 
-        // Tell the client about the success
         res.status(201).send(user);
     } catch (error) {
-        // Tell the operator about the error
-        console.error("<!> Error creating user:", error);
-
-        // Tell the client about the error
+        console.error("<!> Erro ao criar usuário:", error);
         res.status(400).send(error);
     }
 
-    console.log("\n"); // Just to make the logs more readable
+    console.log("\n");
 });
 
-// GET /users
-router.get("/users", async (req, res) => {
-    console.log("# [GET] /users");
+// GET /user/:id - Obter informações de um usuário específico
+router.get("/user/:id", async (req, res) => {
+    console.log("# [GET] /user/:id");
 
     try {
-        // Retrieving all users from the database
-        const users = await User.find();
+        const user = await User.findById(req.params.id).exec();
 
-        // Tell the operator about the success
-        console.log("<$> Users retrieved:", users);
+        if (!user) {
+            console.error("<!> Usuário não encontrado com id:", req.params.id);
+            return res.status(404).send({ error: "Usuário não encontrado" });
+        }
 
-        // Tell the client about the success
-        res.status(200).send(users);
+        console.log("<$> Usuário encontrado:", user);
+        res.status(200).send(user);
     } catch (error) {
-        // Tell the operator about the error
-        console.error("<!> Error retrieving users:", error);
-
-        // Tell the client about the error
-        res.status(500).send(error);
+        console.error("<!> Erro ao obter usuário:", error);
+        res.status(400).send(error);
     }
 
-    console.log("\n"); // Just to make the logs more readable
+    console.log("\n");
+});
+
+// PUT /user/:id - Atualizar informações de um usuário específico
+router.put("/user/:id", async (req, res) => {
+    console.log("# [PUT] /user/:id");
+
+    try {
+        console.log("<&> Dados recebidos para atualização:", req.body);
+
+        const { CNS, name, birthdate, email, phone, password, sex } = req.body;
+
+        const user = await User.findByIdAndUpdate(
+            req.params.id,
+            {
+                CNS,
+                name,
+                birthdate,
+                email,
+                phone,
+                password,
+                sex,
+            },
+            { new: true, runValidators: true }
+        );
+
+        if (!user) {
+            console.error("<!> Usuário não encontrado com id:", req.params.id);
+            return res.status(404).send({ error: "Usuário não encontrado" });
+        }
+
+        console.log("<$> Usuário atualizado:", user);
+        res.status(200).send(user);
+    } catch (error) {
+        console.error("<!> Erro ao atualizar usuário:", error);
+        res.status(400).send(error);
+    }
+
+    console.log("\n");
+});
+
+// DELETE /user/:id - Deletar um usuário específico
+router.delete("/user/:id", async (req, res) => {
+    console.log("# [DELETE] /user/:id");
+
+    try {
+        const user = await User.findByIdAndDelete(req.params.id);
+
+        if (!user) {
+            console.error("<!> Usuário não encontrado com id:", req.params.id);
+            return res.status(404).send({ error: "Usuário não encontrado" });
+        }
+
+        console.log("<$> Usuário deletado:", user);
+        res.status(200).send(user);
+    } catch (error) {
+        console.error("<!> Erro ao deletar usuário:", error);
+        res.status(400).send(error);
+    }
+
+    console.log("\n");
 });
 
 export default router;

@@ -10,6 +10,9 @@ import doctorRoutes from './routes/doctorRoutes';
 import insuranceRoutes from './routes/insuranceRoutes';
 import medicineRoutes from './routes/medicineRoutes';
 import prescriptionRoutes from './routes/prescriptionRoutes';
+import pharmacyRoutes from './routes/pharmacyRoutes'; // Importando as rotas de farmácias
+import pharmacistRoutes from './routes/pharmacistRoutes'; // Importando as rotas de farmacêuticos
+import prescriptionRequestRoutes from './routes/prescriptionRequestRoutes'; // Importando as rotas de solicitações de prescrição
 
 // NOTE: use locust for benchmarking
 
@@ -28,6 +31,9 @@ app.use("/api", doctorRoutes);
 app.use("/api", insuranceRoutes);
 app.use("/api", medicineRoutes);
 app.use("/api", prescriptionRoutes);
+app.use("/api", pharmacyRoutes); // Usando as rotas de farmácias
+app.use("/api", pharmacistRoutes); // Usando as rotas de farmacêuticos
+app.use("/api", prescriptionRequestRoutes); // Usando as rotas de solicitações de prescrição
 
 // Start the server
 app.listen(port, () => {

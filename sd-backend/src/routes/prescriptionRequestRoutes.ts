@@ -1,19 +1,19 @@
-import { Router } from "express";
-import PrescriptionRequest from "../models/PrescriptionRequest";
+import express from "express";
+import mongoose from "mongoose";
+import PrescriptionRequest from "../models/PrescriptionRequest"; // Importando o modelo PrescriptionRequest de ../models/
 
-const router = Router();
+const router = express.Router();
 
-// POST /prescription-request
+// POST /prescription-request - Criação de uma nova solicitação de prescrição
 router.post("/prescription-request", async (req, res) => {
     console.log("# [POST] /prescription-request");
 
     try {
-        // What is happening?
-        console.log("<&> data received:", req.body);
+        console.log("<&> Dados recebidos:", req.body);
 
-        // Extracting useful information from the request body
         const {
             prescription,
+            aproved,
             readiness,
             pharmacist,
             requestDate,
@@ -21,58 +21,119 @@ router.post("/prescription-request", async (req, res) => {
             status,
         } = req.body;
 
-        // Creating a new prescription request and then saving it to the database
         const prescriptionRequest = new PrescriptionRequest({
             prescription,
+            aproved,
             readiness,
             pharmacist,
             requestDate,
             deliveryDate,
             status,
         });
+
         await prescriptionRequest.save();
 
-        // Tell the operator about the success
-        console.log("<$> PrescriptionRequest created:", prescriptionRequest);
+        console.log("<$> Solicitação de prescrição criada:", prescriptionRequest);
 
-        // Tell the client about the success
         res.status(201).send(prescriptionRequest);
     } catch (error) {
-        // Tell the operator about the error
-        console.error("<!> Error creating prescription request:", error);
-
-        // Tell the client about the error
+        console.error("<!> Erro ao criar solicitação de prescrição:", error);
         res.status(400).send(error);
     }
 
-    console.log("\n"); // Just to make the logs more readable
+    console.log("\n");
 });
 
-// GET /prescription-requests
-router.get("/prescription-requests", async (req, res) => {
-    console.log("# [GET] /prescription-requests");
+// GET /prescription-request/:id - Obter informações de uma solicitação de prescrição específica
+router.get("/prescription-request/:id", async (req, res) => {
+    console.log("# [GET] /prescription-request/:id");
 
     try {
-        // Retrieving all prescription requests from the database
-        const prescriptionRequests = await PrescriptionRequest.find();
+        const prescriptionRequest = await PrescriptionRequest.findById(req.params.id)
+            .populate("prescription")
+            .exec();
 
-        // Tell the operator about the success
-        console.log(
-            "<$> PrescriptionRequests retrieved:",
-            prescriptionRequests
-        );
+        if (!prescriptionRequest) {
+            console.error("<!> Solicitação de prescrição não encontrada com id:", req.params.id);
+            return res.status(404).send({ error: "Solicitação de prescrição não encontrada" });
+        }
 
-        // Tell the client about the success
-        res.status(200).send(prescriptionRequests);
+        console.log("<$> Solicitação de prescrição encontrada:", prescriptionRequest);
+        res.status(200).send(prescriptionRequest);
     } catch (error) {
-        // Tell the operator about the error
-        console.error("<!> Error retrieving prescription requests:", error);
-
-        // Tell the client about the error
-        res.status(500).send(error);
+        console.error("<!> Erro ao obter solicitação de prescrição:", error);
+        res.status(400).send(error);
     }
 
-    console.log("\n"); // Just to make the logs more readable
+    console.log("\n");
+});
+
+// PUT /prescription-request/:id - Atualizar informações de uma solicitação de prescrição específica
+router.put("/prescription-request/:id", async (req, res) => {
+    console.log("# [PUT] /prescription-request/:id");
+
+    try {
+        console.log("<&> Dados recebidos para atualização:", req.body);
+
+        const {
+            prescription,
+            aproved,
+            readiness,
+            pharmacist,
+            requestDate,
+            deliveryDate,
+            status,
+        } = req.body;
+
+        const prescriptionRequest = await PrescriptionRequest.findByIdAndUpdate(
+            req.params.id,
+            {
+                prescription,
+                aproved,
+                readiness,
+                pharmacist,
+                requestDate,
+                deliveryDate,
+                status,
+            },
+            { new: true, runValidators: true }
+        );
+
+        if (!prescriptionRequest) {
+            console.error("<!> Solicitação de prescrição não encontrada com id:", req.params.id);
+            return res.status(404).send({ error: "Solicitação de prescrição não encontrada" });
+        }
+
+        console.log("<$> Solicitação de prescrição atualizada:", prescriptionRequest);
+        res.status(200).send(prescriptionRequest);
+    } catch (error) {
+        console.error("<!> Erro ao atualizar solicitação de prescrição:", error);
+        res.status(400).send(error);
+    }
+
+    console.log("\n");
+});
+
+// DELETE /prescription-request/:id - Deletar uma solicitação de prescrição específica
+router.delete("/prescription-request/:id", async (req, res) => {
+    console.log("# [DELETE] /prescription-request/:id");
+
+    try {
+        const prescriptionRequest = await PrescriptionRequest.findByIdAndDelete(req.params.id);
+
+        if (!prescriptionRequest) {
+            console.error("<!> Solicitação de prescrição não encontrada com id:", req.params.id);
+            return res.status(404).send({ error: "Solicitação de prescrição não encontrada" });
+        }
+
+        console.log("<$> Solicitação de prescrição deletada:", prescriptionRequest);
+        res.status(200).send(prescriptionRequest);
+    } catch (error) {
+        console.error("<!> Erro ao deletar solicitação de prescrição:", error);
+        res.status(400).send(error);
+    }
+
+    console.log("\n");
 });
 
 export default router;
