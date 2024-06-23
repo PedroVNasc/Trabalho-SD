@@ -1,8 +1,17 @@
 import express from "express";
-import mongoose from "mongoose";
 import User from "../models/User"; // Importando o modelo User de ../models/
+import { producer } from "../kafka"; // Importando o producer Kafka
+import { v4 as uuidv4 } from "uuid";
 
 const router = express.Router();
+
+// Função para enviar mensagens para o Kafka
+const sendMessageToKafka = async (topic: string, message: object) => {
+    await producer.send({
+        topic,
+        messages: [{ key: uuidv4(), value: JSON.stringify(message) }],
+    });
+};
 
 // POST /user - Criação de um novo usuário
 router.post("/user", async (req, res) => {
@@ -24,6 +33,7 @@ router.post("/user", async (req, res) => {
         });
 
         await user.save();
+        await sendMessageToKafka("user_created", user);
 
         console.log("<$> Usuário criado:", user);
 
@@ -86,6 +96,8 @@ router.put("/user/:id", async (req, res) => {
             return res.status(404).send({ error: "Usuário não encontrado" });
         }
 
+        await sendMessageToKafka("user_updated", user);
+
         console.log("<$> Usuário atualizado:", user);
         res.status(200).send(user);
     } catch (error) {
@@ -107,6 +119,8 @@ router.delete("/user/:id", async (req, res) => {
             console.error("<!> Usuário não encontrado com id:", req.params.id);
             return res.status(404).send({ error: "Usuário não encontrado" });
         }
+
+        await sendMessageToKafka("user_deleted", user);
 
         console.log("<$> Usuário deletado:", user);
         res.status(200).send(user);
