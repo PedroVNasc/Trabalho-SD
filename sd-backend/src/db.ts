@@ -1,16 +1,14 @@
-import { MongoClient } from "mongodb";
+import mongoose from "mongoose";
 
-const url = "example-url";
-const client = new MongoClient(url);
+const mongoURI = "mongodb://localhost:27017/database";
 
-export async function connectToDatabase() {
-    try {
-        await client.connect();
-        console.log("Connected to MongoDB");
-    } catch (error) {
-        console.error("Could not connect to MongoDB", error);
-        process.exit(1);
-    }
-}
+mongoose.connect(mongoURI);
 
-export const db = client.db("my-database");
+const db = mongoose.connection;
+
+db.on("error", console.error.bind(console, "connection error:"));
+db.once("open", () => {
+    console.log("Connected to MongoDB");
+});
+
+export default db;
