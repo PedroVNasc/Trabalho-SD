@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const mongoURI = "mongodb://localhost:27017/database";
+const mongoURI = "mongodb://backend-net:27017/database";
 
 mongoose.connect(mongoURI);
 
