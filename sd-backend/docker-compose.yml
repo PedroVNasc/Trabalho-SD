@@ -27,18 +27,20 @@ services:
         networks:
             - backend-net
 
-    backend:
-        build:
-            context: .
-            dockerfile: Dockerfile.dev
-        ports:
-            - "3000:3000"
-        depends_on:
-            - mongo
-            - kafka
-        networks:
-            - backend-net
-            - kafka-net
+    # backend:
+    #     build:
+    #         context: .
+    #         dockerfile: Dockerfile.dev
+    #     ports:
+    #         - "3000:3000"
+    #     depends_on:
+    #         - mongo
+    #         - kafka
+    #     links:
+    #         - mongo
+    #     networks:
+    #         - backend-net
+    #         - kafka-net
 
 networks:
     backend-net:
