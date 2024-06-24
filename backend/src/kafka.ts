@@ -1,8 +1,9 @@
 // src/kafka.ts
 import { Kafka } from "kafkajs";
+import topics from "./config/topics";
 
 export const kafka = new Kafka({
-    clientId: "sus-app",
+    clientId: "sus-backend",
     brokers: ["kafka:9092"],
 });
 
@@ -17,12 +18,7 @@ export const kafkaSetup = async () => {
     console.log("Connected to Kafka!");
 
     await kafkAdim.createTopics({
-        topics: [
-            {
-                topic: "sus",
-                numPartitions: 1,
-            },
-        ],
+        topics: topics,
     });
 
     console.log("Kafka setup done!");
