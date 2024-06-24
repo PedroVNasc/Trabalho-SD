@@ -26,6 +26,11 @@ export const runUserConsumer = async () => {
 
     await consumer.run({
         eachMessage: async ({ topic, message }) => {
+            console.log('Incoming message:', {
+                topic,
+                value: message.value?.toString(),
+            });
+
             switch (topic) {
                 case 'user_created':
                     await processUserCreated(message);

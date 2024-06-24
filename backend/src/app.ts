@@ -1,7 +1,7 @@
 import express from 'express';
 import db from './db'; // Importando a configuração do banco de dados
 import userRoutes from './routes/userRoutes';
-import { runKafka } from './kafka';
+import { kafkaSetup } from './kafka';
 import { runUserConsumer } from './consumer/userConsumer';
 
 const app = express();
@@ -11,9 +11,10 @@ app.use(express.json());
 app.use('/api', userRoutes);
 
 db.once('open', () => {
-    runKafka().then(() => {
+    kafkaSetup().then(() => {
         console.log('Kafka Producer and Consumer connected');
-        // runUserConsumer();
+        runUserConsumer();
+        console.log('User Consumer running...');
     });
 });
 
