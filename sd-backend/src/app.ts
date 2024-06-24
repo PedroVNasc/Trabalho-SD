@@ -13,7 +13,7 @@ app.use('/api', userRoutes);
 db.once('open', () => {
     runKafka().then(() => {
         console.log('Kafka Producer and Consumer connected');
-        runUserConsumer();
+        // runUserConsumer();
     });
 });
 

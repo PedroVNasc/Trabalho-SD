@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
 
-const mongoURI = "mongodb://localhost:27017/database";
+const mongoURI = "mongodb://mongo:27017/database";
 
+console.log("Connecting to MongoDB at URI:", mongoURI);
 mongoose.connect(mongoURI);
 
 const db = mongoose.connection;
