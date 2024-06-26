@@ -1,0 +1,1 @@
+console.log(`[CONSUMER:0] Hello World!`);

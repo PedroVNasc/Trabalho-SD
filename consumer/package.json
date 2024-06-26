@@ -1,8 +1,8 @@
 {
-    "name": "portal",
+    "name": "consumer",
     "version": "1.0.0",
     "description": "",
-    "main": "dist/app.js",
+    "main": "build/app.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "start": "node build/app.js",
@@ -14,7 +14,6 @@
     "author": "",
     "license": "ISC",
     "dependencies": {
-        "express": "^4.19.2",
         "kafkajs": "^2.2.4",
         "mongoose": "^8.4.4"
     },
