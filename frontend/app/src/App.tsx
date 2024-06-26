@@ -38,13 +38,14 @@ function TabPanel(props: TabPanelProps) {
 interface FormTextProps {
   label: string,
   id: string,
+  type?: string
   size?: number
 }
 
 function FormText(props: FormTextProps) {
   return (
     <Grid item xs={props.size ?? 6}>
-      <TextField label={props.label} id={props.id} variant='standard' />
+      <TextField label={props.label} type={props.type ?? 'text'} id={props.id} variant='standard' />
     </Grid>
   )
 }
@@ -112,7 +113,7 @@ function App() {
       <TabPanel value={value} index={0}>
         <h2>Informações da Clinica</h2>
         <Grid container spacing={2}>
-          <FormText label='ID' id='clinic_id' size={12} />
+          <FormText label='ID' id='clinic_id' size={12} type='number' />
           <FormText label='Nome' id='clinic_name' size={12} />
         </Grid>
       </TabPanel>
@@ -120,10 +121,10 @@ function App() {
       <TabPanel value={value} index={1}>
         <h2>Informações do Médico</h2>
         <Grid container spacing={2}>
-          <FormText label='ID' id='doctor_id' />
+          <FormText label='ID' id='doctor_id' type='number' />
           <FormText label='Nome' id='doctor_name' />
-          <FormText label='Email' id='doctor_email' />
-          <FormText label='Telefone' id='doctor_phone' />
+          <FormText label='Email' id='doctor_email' type='email' />
+          <FormText label='Telefone' id='doctor_phone' type='tel' />
           <FormText label='Endereço' id='doctor_adress' size={4} />
           <FormText label='Cidade' id='doctor_city' size={4} />
           <FormText label='Estado' id='doctor_state' size={4} />
@@ -153,16 +154,16 @@ function App() {
           <FormDate label='Data de Expiração' />
           <FormText label='Número de Lote' id='medicine_batch' />
           <FormText label='Indicações' id='medicine_indications' />
-          <FormText label='Preço' id='medicine_price' />
+          <FormText label='Preço' id='medicine_price' type='' />
           <FormText label='Exige prescricão?' id='medicine_prescription' />
-          <FormText label='Quantidade' id='medicine_quantity' />
+          <FormText label='Quantidade' id='medicine_quantity' type='number' />
         </Grid>
       </TabPanel>
 
       <TabPanel value={value} index={4}>
         <h2>Informações do Farmaceutico</h2>
         <Grid container spacing={2}>
-          <FormText label='ID' id='pharmacist_id' />
+          <FormText label='ID' id='pharmacist_id' type='number' />
           <FormText label='Nome' id='pharmacist_name' />
           <FormText label='Endereço' id='pharmacist_adress' />
           <FormText label='Telefone' id='pharmacist_phone' />
@@ -184,7 +185,7 @@ function App() {
       <TabPanel value={value} index={6}>
         <h2>Informações da Prescrição</h2>
         <Grid container spacing={2}>
-          <FormText label='ID' id='prescription_id' />
+          <FormText label='ID' id='prescription_id' type='number' />
           <FormText label='Medicamento' id='prescription_medicine' />
           <FormText label='Paciente' id='prescription_patient' />
           <FormText label='Doutor' id='prescription_doctor' />
