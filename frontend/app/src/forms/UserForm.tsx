@@ -28,7 +28,7 @@ const UserForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://andromeda.lasdpc.icmc.usp.br:7011/api/user', formData);
+      const response = await axios.post('http://andromeda.lasdpc.icmc.usp.br:6011/api/user', formData);
       setSnackbarMessage('Form submitted successfully!');
       setSnackbarSeverity('success');
       setOpenSnackbar(true);

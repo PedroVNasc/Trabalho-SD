@@ -32,7 +32,7 @@ const MedicineForm = () => {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://andromeda.lasdpc.icmc.usp.br:7011/api/medicine', formData);
+      const response = await axios.post('http://andromeda.lasdpc.icmc.usp.br:6011/api/medicine', formData);
       console.log('Form submitted successfully:', response.data);
     } catch (error) {
       console.error('Error submitting form:', error);

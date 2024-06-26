@@ -14,7 +14,7 @@ RUN npm install -g pnpm && pnpm install
 COPY . .
 
 # Expose the application port
-EXPOSE 7011
+EXPOSE 6011
 
 # Start the application using ts-node-dev
 CMD ["pnpm", "release"]

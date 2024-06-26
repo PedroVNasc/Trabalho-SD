@@ -29,14 +29,14 @@ services:
             context: ./portal
             dockerfile: Dockerfile
         ports:
-            - "7011:7011"
+            - "6011:6011"
         depends_on:
             - mongo
             - kafka
         environment:
             - NAME=portal-0
             - MONGO_URI=mongodb://mongo:27017/db
-            - PORT=7011
+            - PORT=6011
 
     consumer:
         build:
@@ -65,12 +65,3 @@ services:
         volumes:
             - ./frontend/Caddyfile:/etc/caddy/Caddyfile
             - ./frontend/app/dist:/srv
-
-    data-populator:
-        build:
-            context: ./populate
-            dockerfile: Dockerfile
-        depends_on:
-            - mongo
-            - portal
-            - consumer

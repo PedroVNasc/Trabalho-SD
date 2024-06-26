@@ -5,6 +5,6 @@ http://andromeda.lasdpc.icmc.usp.br:5011 {
     file_server
 }
 
-http://andromeda.lasdpc.icmc.usp.br:7011 {
-    reverse_proxy portal:3000 
+http://andromeda.lasdpc.icmc.usp.br:6011 {
+    reverse_proxy portal:6011 
 }

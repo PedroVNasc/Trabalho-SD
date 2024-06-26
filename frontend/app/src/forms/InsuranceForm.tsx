@@ -23,7 +23,7 @@ const InsuranceForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://andromeda.lasdpc.icmc.usp.br:7011/api/insurance', formData);
+      const response = await axios.post('http://andromeda.lasdpc.icmc.usp.br:6011/api/insurance', formData);
       setSnackbarMessage('Form submitted successfully!');
       setSnackbarSeverity('success');
       setOpenSnackbar(true);
