@@ -1,12 +1,8 @@
-version: "3.8"
-
 services:
     zookeeper:
         image: zookeeper
         ports:
             - "2181:2181"
-        networks:
-            - backend-net
 
     kafka:
         image: wurstmeister/kafka
@@ -20,15 +16,13 @@ services:
             ALLOW_PLAINTEXT_LISTENER: 1
         depends_on:
             - zookeeper
-        networks:
-            - backend-net
+
 
     mongo:
         image: mongo
         ports:
             - "27017:27017"
-        networks:
-            - backend-net
+    
 
     portal:
         build:
@@ -39,8 +33,9 @@ services:
         depends_on:
             - mongo
             - kafka
-        networks:
-            - backend-net
+        environment:
+            - NAME=portal-0
+            - MONGO_URI=mongodb://mongo:27017
 
     consumer:
         build:
@@ -50,8 +45,7 @@ services:
             - "3005:3005"
         depends_on:
             - portal
-        networks:
-            - backend-net
+        environment:
+            - NAME=consumer-0
+            - MONGO_URI=mongodb://mongo:27017
 
-networks:
-    backend-net:

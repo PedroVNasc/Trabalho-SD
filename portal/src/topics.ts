@@ -11,3 +11,5 @@ const topics = [
         replicationFactor: 1,
     },
 ];
+
+export default topics;
