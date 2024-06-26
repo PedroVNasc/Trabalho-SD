@@ -20,6 +20,7 @@ function TabPanel(props: TabPanelProps) {
       hidden={value !== index}
       id={`vertical-tabpanel-${index}`}
       aria-labelledby={`vertical-tab-${index}`}
+      className='tab-panel'
       {...other}
     >
       {value === index && (
@@ -69,6 +70,8 @@ function App() {
         marginLeft: '10vw',
         width: '80vw',
         height: 'auto',
+        borderRadius: '30px',
+        boxShadow: 'black 5px 0px 5px 0px',
       }}
 
       component='form'
