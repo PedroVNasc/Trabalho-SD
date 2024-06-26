@@ -1,37 +1,27 @@
 from locust import HttpUser, task, between
-from random import randint
 
 base = '/api'
 
+
 class Spammer(HttpUser):
+    wait_time = between(0.5, 2)
+
     @task
     def clinic_spam(self):
-        for _ in range(1000):
+        for _ in range(10):
             self.client.get(f"{base}/clinic/{0}")
-        
-    wait_time = between(0.5, 1)
-    
+
     @task
     def doctor_spam(self):
-        for _ in range(1000):
+        for _ in range(10):
             self.client.get(f"{base}/doctor/{0}")
-        
-    wait_time = between(0.5, 1)
-    
+
     @task
     def prescription_spam(self):
-        for _ in range(1000):
+        for _ in range(10):
             self.client.get(f"{base}/prescription/{0}")
-        
-    wait_time = between(0.5, 1)
-    
+
     @task
     def prescription_request_spam(self):
-        for _ in range(1000):
+        for _ in range(10):
             self.client.get(f"{base}/prescription-request/{0}")
-        
-    wait_time = between(0.5, 1)
-    
-    
-        
-    

@@ -1,10 +1,11 @@
-import requests
+from locust import HttpUser, task, between
 from faker import Faker
 import random
 
 fake = Faker()
 
-BASE_URL = "http://localhost:3000/api"
+BASE = '/api'
+
 
 def create_user():
     data = {
@@ -16,8 +17,9 @@ def create_user():
         "password": fake.password(),
         "sex": random.choice(["M", "F"])
     }
-    response = requests.post(f"{BASE_URL}/user", json=data)
-    return response.json()
+
+    return data
+
 
 def create_doctor():
     data = {
@@ -32,16 +34,18 @@ def create_doctor():
         "specialty": fake.job(),
         "licenseNumber": fake.unique.ssn()
     }
-    response = requests.post(f"{BASE_URL}/doctor", json=data)
-    return response.json()
+
+    return data
+
 
 def create_insurance():
     data = {
         "region": fake.state(),
         "name": fake.company()
     }
-    response = requests.post(f"{BASE_URL}/insurance", json=data)
-    return response.json()
+
+    return data
+
 
 def create_medicine():
     data = {
@@ -61,8 +65,9 @@ def create_medicine():
         "prescriptionRequired": random.choice([True, False]),
         "quantity": random.randint(1, 1000)
     }
-    response = requests.post(f"{BASE_URL}/medicine", json=data)
-    return response.json()
+
+    return data
+
 
 def create_prescription(user_id, doctor_id, medicine_id):
     data = {
@@ -71,8 +76,9 @@ def create_prescription(user_id, doctor_id, medicine_id):
         "patient": user_id,
         "doctor": doctor_id
     }
-    response = requests.post(f"{BASE_URL}/prescription", json=data)
-    return response.json()
+
+    return data
+
 
 def create_pharmacy():
     data = {
@@ -81,8 +87,9 @@ def create_pharmacy():
         "address": fake.address(),
         "medicines": [create_medicine()]
     }
-    response = requests.post(f"{BASE_URL}/pharmacy", json=data)
-    return response.json()
+
+    return data
+
 
 def create_pharmacist(pharmacy_id):
     data = {
@@ -95,8 +102,9 @@ def create_pharmacist(pharmacy_id):
         "licenseNumber": fake.unique.ssn(),
         "pharmacyId": pharmacy_id
     }
-    response = requests.post(f"{BASE_URL}/pharmacist", json=data)
-    return response.json()
+
+    return data
+
 
 def create_prescription_request(prescription_id, pharmacist_id):
     data = {
@@ -108,42 +116,38 @@ def create_prescription_request(prescription_id, pharmacist_id):
         "deliveryDate": fake.date(),
         "status": random.choice(["Pending", "Approved", "Rejected"])
     }
-    response = requests.post(f"{BASE_URL}/prescription-request", json=data)
-    return response.json()
 
-def main():
-    print("Creating user...")
-    user = create_user()
-    print(user)
+    return data
 
-    print("Creating doctor...")
-    doctor = create_doctor()
-    print(doctor)
 
-    print("Creating insurance...")
-    insurance = create_insurance()
-    print(insurance)
+class Spammer(HttpUser):
+    wait_time = between(0.5, 1)
 
-    print("Creating medicine...")
-    medicine = create_medicine()
-    print(medicine)
-
-    print("Creating prescription...")
-    prescription = create_prescription(user['_id'], doctor['_id'], medicine['_id'])
-    print(prescription)
-
-    print("Creating pharmacy...")
-    pharmacy = create_pharmacy()
-    print(pharmacy)
-
-    print("Creating pharmacist...")
-    pharmacist = create_pharmacist(pharmacy['_id'])
-    print(pharmacist)
-
-    print("Creating prescription request...")
-    prescription_request = create_prescription_request(prescription['_id'], pharmacist['_id'])
-    print(prescription_request)
-
-if __name__ == "__main__":
-    main()
-
+    @task
+    def write_spam(self):
+        for _ in range(100):
+            user_data = create_user()
+            user = self.client.post(f"{BASE}/user", json=user_data)
+            
+            doctor_data = create_doctor()
+            doctor = self.client.post(f"{BASE}/doctor", json=doctor_data)
+            
+            insurance_data = create_insurance()
+            insurance = self.client.post(f"{BASE}/insurance", json=insurance_data)
+            
+            medicine_data = create_medicine()
+            medicine = self.client.post(f"{BASE}/medicine", json=medicine_data)
+            
+            prescription_data = create_prescription(user['_id'], doctor['_id'], medicine['_id'])
+            prescription = self.client.post(f"{BASE}/prescription", json=prescription_data)
+            
+            pharmacy_data = create_pharmacy()
+            pharmacy = self.client.post(f"{BASE}/pharmacy", json=pharmacy_data)
+            
+            pharmacist_data = create_pharmacist(pharmacy['_id'])
+            pharmacist = self.client.post(f"{BASE}/pharmacist", json=pharmacist_data)
+            
+            prescription_request_data = create_prescription_request(prescription['_id'], pharmacist['_id'])
+            prescription_request = self.client.post(f"{BASE}/prescription-request", json=prescription_request_data)
+            
+            
