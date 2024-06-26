@@ -42,6 +42,7 @@ const UserForm: React.FC = () => {
   };
 
   const handleCloseSnackbar = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    console.log(event, reason);
     if (reason === 'clickaway') {
       return;
     }

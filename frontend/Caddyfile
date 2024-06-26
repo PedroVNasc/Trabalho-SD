@@ -1,6 +1,7 @@
 # vi: ft=yaml
 
 http://andromeda.lasdpc.icmc.usp.br:5011 {
+    root * /app/dist/index.html    
     try_files {path} /index.html
     file_server
 }
