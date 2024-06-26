@@ -79,7 +79,7 @@ function App() {
         value={value}
         onChange={handleChange}
         aria-label="Vertical tabs example"
-        sx={{ borderRight: 1, borderColor: 'divider', width: '50vw' }}
+        sx={{ borderRight: 1, borderColor: 'divider', minWidth: '20vw' }}
       >
         <Tab label="Clinic" {...a11yProps(0)} />
         <Tab label="Doctor" {...a11yProps(1)} />
