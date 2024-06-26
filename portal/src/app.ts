@@ -5,10 +5,11 @@ import db from "./db";
 import { create } from "domain";
 import { connect2Kafka, createTopics } from "./kafka";
 import { NAME, PORT } from "./config/constants";
+import { conlog, sleep } from "./utils/utils";
 
 // Importing routes
 import userRoutes from "./routes/user-routes";
-import { conlog, sleep } from "./utils/utils";
+import taskRoutes from "./routes/task-routes";
 
 // Hello World!
 console.log(`[PORTAL:0] Hello World!`);
@@ -27,6 +28,7 @@ app.get("/", (req, res) => {
 
 // User routes
 app.use(userRoutes);
+app.use(taskRoutes);
 
 // Start server function
 const startServer = async () => {
