@@ -4,6 +4,9 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { FormLabel, Grid, InputLabel, TextField } from '@mui/material';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -42,6 +45,17 @@ function FormText(props: FormTextProps) {
   return (
     <Grid item xs={props.size ?? 6}>
       <TextField label={props.label} id={props.id} variant='standard' />
+    </Grid>
+  )
+}
+
+function FormDate(props: { size?: number, label: string }) {
+  return (
+    <Grid item xs={props.size ?? 6}>
+      <FormLabel>{props.label}</FormLabel>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DatePicker />
+      </LocalizationProvider>
     </Grid>
   )
 }
@@ -89,24 +103,27 @@ function App() {
         <Tab label="Insurance" {...a11yProps(2)} />
         <Tab label="Medicine" {...a11yProps(3)} />
         <Tab label="Pharmacist" {...a11yProps(4)} />
-        <Tab label="Prescription" {...a11yProps(5)} />
-        <Tab label="PrescriptionRequest" {...a11yProps(6)} />
-        <Tab label="User" {...a11yProps(7)} />
+        <Tab label="Pharmacy" {...a11yProps(5)} />
+        <Tab label="Prescription" {...a11yProps(6)} />
+        <Tab label="PrescriptionRequest" {...a11yProps(7)} />
+        <Tab label="User" {...a11yProps(8)} />
       </Tabs>
+
       <TabPanel value={value} index={0}>
         <h2>Informações da Clinica</h2>
         <Grid container spacing={2}>
-          <FormText label='ID' id='clinic_id' />
-          <FormText label='Nome' id='clinic_name' />
+          <FormText label='ID' id='clinic_id' size={12} />
+          <FormText label='Nome' id='clinic_name' size={12} />
         </Grid>
       </TabPanel>
+
       <TabPanel value={value} index={1}>
         <h2>Informações do Médico</h2>
         <Grid container spacing={2}>
-          <FormText label='ID' id='doctor_id' size={4} />
-          <FormText label='Nome' id='doctor_name' size={4} />
-          <FormText label='Email' id='doctor_email' size={4} />
-          <FormText label='Telefone' id='doctor_phone' size={4} />
+          <FormText label='ID' id='doctor_id' />
+          <FormText label='Nome' id='doctor_name' />
+          <FormText label='Email' id='doctor_email' />
+          <FormText label='Telefone' id='doctor_phone' />
           <FormText label='Endereço' id='doctor_adress' size={4} />
           <FormText label='Cidade' id='doctor_city' size={4} />
           <FormText label='Estado' id='doctor_state' size={4} />
@@ -115,6 +132,7 @@ function App() {
           <FormText label='CRM' id='doctor_crm' size={4} />
         </Grid>
       </TabPanel>
+
       <TabPanel value={value} index={2}>
         <h2>Informações do Seguro</h2>
         <Grid container spacing={2}>
@@ -122,6 +140,7 @@ function App() {
           <FormText label='Região' id='insurance_region' />
         </Grid>
       </TabPanel>
+
       <TabPanel value={value} index={3}>
         <h2>Informações do Medicamento</h2>
         <Grid container spacing={2}>
@@ -131,7 +150,7 @@ function App() {
           <FormText label='Dosagem' id='medicine_dosage' />
           <FormText label='Força' id='medicine_strength' />
           <FormText label='Fabricante' id='medicine_manufacturer' />
-          <FormText label='Data de Expiração' id='medicine_expiration' />
+          <FormDate label='Data de Expiração' />
           <FormText label='Número de Lote' id='medicine_batch' />
           <FormText label='Indicações' id='medicine_indications' />
           <FormText label='Preço' id='medicine_price' />
@@ -139,21 +158,58 @@ function App() {
           <FormText label='Quantidade' id='medicine_quantity' />
         </Grid>
       </TabPanel>
+
       <TabPanel value={value} index={4}>
-        Pharmacist
+        <h2>Informações do Farmaceutico</h2>
+        <Grid container spacing={2}>
+          <FormText label='ID' id='pharmacist_id' />
+          <FormText label='Nome' id='pharmacist_name' />
+          <FormText label='Endereço' id='pharmacist_adress' />
+          <FormText label='Telefone' id='pharmacist_phone' />
+          <FormText label='Email' id='pharmacist_email' />
+          <FormText label='Licença' id='pharmacist_license' />
+        </Grid>
       </TabPanel>
+
       <TabPanel value={value} index={5}>
-        Prescription
+        <h2>Informações da Farmácia</h2>
+        <Grid container spacing={2}>
+          <FormText label='Região' id='pharmacy_region' />
+          <FormText label='Nome' id='pharmacy_name' />
+          <FormText label='Endereço' id='pharmacy_address' />
+          <FormText label='Medicamentos' id='pharmacy_medicines' />
+        </Grid>
       </TabPanel>
+
       <TabPanel value={value} index={6}>
-        PrescriptionRequest
+        <h2>Informações da Prescrição</h2>
+        <Grid container spacing={2}>
+          <FormText label='ID' id='prescription_id' />
+          <FormText label='Medicamento' id='prescription_medicine' />
+          <FormText label='Paciente' id='prescription_patient' />
+          <FormText label='Doutor' id='prescription_doctor' />
+        </Grid>
       </TabPanel>
+
       <TabPanel value={value} index={7}>
+        <h2>Informações da Requisição de Prescricao</h2>
+        <Grid container spacing={2}>
+          <FormText label='Prescricao' id='prescriptionRequest_prescription' />
+          <FormText label='Aprovado' id='prescriptionRequest_aproved' />
+          <FormText label='Prontuario' id='prescriptionRequest_readiness' />
+          <FormText label='Farmaceutico' id='prescriptionRequest_pharmacist' />
+          <FormDate label='Data da Requisição' />
+          <FormDate label='Data de Entrega' />
+          <FormText label='Status' id='prescriptionRequest_status' />
+        </Grid>
+      </TabPanel>
+
+      <TabPanel value={value} index={8}>
         <h2>Informações do Usuário</h2>
         <Grid container spacing={2}>
           <FormText label='CNS' id='user_CNS' />
           <FormText label='Nome' id='user_name' />
-          <FormText label='Data de Nascimento' id='user_birthdate' />
+          <FormDate label='Data de Nascimento' />
           <FormText label='Email' id='user_email' />
           <FormText label='Telefone' id='user_phone' />
           <FormText label='Senha' id='user_password' />
