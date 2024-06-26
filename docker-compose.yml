@@ -46,13 +46,30 @@ services:
             context: ./backend
             dockerfile: Dockerfile.dev
         ports:
-            - "3000:3000"
+            - "3000:7011"
         depends_on:
             - mongo
             - kafka
             # - kafka-setup
         networks:
             - backend-net
+
+    frontend:
+        image: caddy:latest
+        restart: unless-stopped
+        ports:
+            - "5011:5011"
+        networks:
+            - backend-net
+        volumes:
+            - ./frontend/Caddyfile:/etc/caddy/Caddyfile
+            - ./frontend/site:/srv
+      #      - caddy_data:/data
+      #      - caddy_config:/config
+    
+   # volumes:
+    #    caddy_data:./fronted/data
+     #   caddy_config:./frontend/config
 
 networks:
     backend-net:
