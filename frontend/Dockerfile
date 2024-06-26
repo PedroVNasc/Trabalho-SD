@@ -5,16 +5,10 @@ FROM node:20
 WORKDIR /usr/src/app
 
 # Copy package.json and pnpm-lock.yaml to the working directory
-COPY package.json pnpm-lock.yaml ./
+COPY app/* ./
 
 # Install pnpm and dependencies
 RUN npm install -g pnpm && pnpm install
 
-# Copy the rest of the application code
-COPY . .
-
-# Expose the application port
-EXPOSE 7011
-
 # Start the application using ts-node-dev
-CMD ["pnpm", "release"]
+CMD ["pnpm", "build"]

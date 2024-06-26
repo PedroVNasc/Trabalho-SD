@@ -24,7 +24,7 @@ const PrescriptionRequestForm = () => {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://andromeda.lasdpc.icmc.usp.br:7011/prescriptionRequest', formData);
+      const response = await axios.post('http://andromeda.lasdpc.icmc.usp.br:7011/api/prescriptionRequest', formData);
       console.log('Form submitted successfully:', response.data);
     } catch (error) {
       console.error('Error submitting form:', error);

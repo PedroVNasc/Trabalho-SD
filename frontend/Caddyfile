@@ -6,7 +6,5 @@ http://andromeda.lasdpc.icmc.usp.br:5011 {
 }
 
 http://andromeda.lasdpc.icmc.usp.br:7011 {
-    reverse_proxy portal-1:3000 portal-2:3000 portal-alyx:3000 {
-        lb_policy round_robin
-    }
+    reverse_proxy portal:3000 
 }

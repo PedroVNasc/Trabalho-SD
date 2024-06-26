@@ -42,16 +42,23 @@ services:
             context: ./consumer
             dockerfile: Dockerfile
         ports:
-            - "3005:3005"
+            - "3000:3005"
         depends_on:
             - portal
         environment:
             - NAME=consumer-0
             - MONGO_URI=mongodb://mongo:27017/db
+
+    frontend:
+        build:
+            context: ./frontend
+            dockerfile: Dockerfile
             
     caddy:
         image: caddy:latest
         restart: unless-stopped
+        depends_on:
+            - frontend
         ports:
             - "5011:5011"
         volumes:
