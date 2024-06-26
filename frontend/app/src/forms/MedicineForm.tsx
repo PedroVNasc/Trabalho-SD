@@ -158,6 +158,7 @@ const MedicineForm = () => {
               name="prescriptionRequired"
             />
           }
+          style={{color: 'black'}}
           label="Prescription Required"
         />
         <TextField

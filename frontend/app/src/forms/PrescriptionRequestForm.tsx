@@ -50,6 +50,7 @@ const PrescriptionRequestForm = () => {
               name="aproved"
             />
           }
+          style={{color: 'black'}}
           label="Approved"
         />
         <TextField

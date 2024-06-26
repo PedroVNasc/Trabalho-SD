@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
-import { TextField, Button, Container, Box } from '@mui/material';
+import { TextField, Button, Container, Box, Snackbar, Alert } from '@mui/material';
 import axios from 'axios';
 
-const InsuranceForm = () => {
+const InsuranceForm: React.FC = () => {
   const [formData, setFormData] = useState({
     region: '',
     name: ''
   });
 
-  const handleChange = (e: any) => {
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -16,14 +20,27 @@ const InsuranceForm = () => {
     });
   };
 
-  const handleSubmit = async (e: any) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://andromeda.lasdpc.icmc.usp.br:7011/insurance', formData);
+      const response = await axios.post('http://your-server-ip:7011/insurance', formData);
+      setSnackbarMessage('Form submitted successfully!');
+      setSnackbarSeverity('success');
+      setOpenSnackbar(true);
       console.log('Form submitted successfully:', response.data);
     } catch (error) {
+      setSnackbarMessage('Error submitting form.');
+      setSnackbarSeverity('error');
+      setOpenSnackbar(true);
       console.error('Error submitting form:', error);
     }
+  };
+
+  const handleCloseSnackbar = (event?: React.SyntheticEvent | Event, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenSnackbar(false);
   };
 
   return (
@@ -49,6 +66,11 @@ const InsuranceForm = () => {
           Submit
         </Button>
       </Box>
+      <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+        <Alert onClose={handleCloseSnackbar} severity={snackbarSeverity} sx={{ width: '100%' }}>
+          {snackbarMessage}
+        </Alert>
+      </Snackbar>
     </Container>
   );
 };
