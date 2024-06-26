@@ -54,8 +54,6 @@ services:
         restart: unless-stopped
         ports:
             - "5011:5011"
-        networks:
-            - backend-net
         volumes:
             - ./frontend/Caddyfile:/etc/caddy/Caddyfile
             - ./frontend/app/dist:/srv
