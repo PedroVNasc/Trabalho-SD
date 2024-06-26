@@ -48,6 +48,17 @@ services:
         environment:
             - NAME=consumer-0
             - MONGO_URI=mongodb://mongo:27017/db
+            
+    caddy:
+        image: caddy:latest
+        restart: unless-stopped
+        ports:
+            - "5011:5011"
+        networks:
+            - backend-net
+        volumes:
+            - ./frontend/Caddyfile:/etc/caddy/Caddyfile
+            - ./frontend/app/dist:/srv
 
     data-populator:
         build:
