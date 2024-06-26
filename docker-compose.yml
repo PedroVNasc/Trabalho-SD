@@ -29,20 +29,21 @@ services:
             context: ./portal
             dockerfile: Dockerfile
         ports:
-            - "3000:3000"
+            - "7011:7011"
         depends_on:
             - mongo
             - kafka
         environment:
             - NAME=portal-0
             - MONGO_URI=mongodb://mongo:27017/db
+            - PORT=7011
 
     consumer:
         build:
             context: ./consumer
             dockerfile: Dockerfile
         ports:
-            - "3000:3005"
+            - "3005:3005"
         depends_on:
             - portal
         environment:
