@@ -1,7 +1,7 @@
 import express from "express";
-import User from "../models/user-module"; // Importando o modelo User de ../models/
-import { producer, sendMessageToKafka } from "../kafka"; // Importando o producer Kafka
-import { v4 as uuidv4 } from "uuid";
+import User from "../models/user-model"; // Importando o modelo User de ../models/
+import { createTask } from "../utils/tasks";
+import { kafkaLog } from "../kafka";
 
 const router = express.Router();
 
@@ -25,11 +25,9 @@ router.post("/user", async (req, res) => {
         });
 
         // await user.save();
-        await sendMessageToKafka("user-created", user);
+        const taskData = await createTask("create/user", user);
 
-        console.log("<$> Usuário criado [no kafka]:", user);
-
-        res.status(201).send(user);
+        res.status(201).send(taskData);
     } catch (error) {
         console.error("<!> Erro ao criar usuário:", error);
         res.status(400).send(error);
@@ -38,15 +36,17 @@ router.post("/user", async (req, res) => {
     console.log("\n");
 });
 
-// GET /user/:id - Obter informações de um usuário específico
-router.get("/user/:id", async (req, res) => {
-    console.log("# [GET] /user/:id");
+// GET /user/:CNS - Obter informações de um usuário específico
+router.get("/user/:CNS", async (req, res) => {
+    console.log("# [GET] /user/:CNS");
 
     try {
-        const user = await User.findById(req.params.id).exec();
+        const CNS = req.params.CNS;
+
+        const user = await User.findOne({ CNS }).exec();
 
         if (!user) {
-            console.error("<!> Usuário não encontrado com id:", req.params.id);
+            console.error("<!> Usuário não encontrado com CNS:", CNS);
             return res.status(404).send({ error: "Usuário não encontrado" });
         }
 
@@ -61,37 +61,47 @@ router.get("/user/:id", async (req, res) => {
 });
 
 // PUT /user/:id - Atualizar informações de um usuário específico
-router.put("/user/:id", async (req, res) => {
-    console.log("# [PUT] /user/:id");
+router.put("/user/:CNS", async (req, res) => {
+    console.log("# [PUT] /user/:CNS");
 
     try {
         console.log("<&> Dados recebidos para atualização:", req.body);
 
-        const { CNS, name, birthdate, email, phone, password, sex } = req.body;
+        const CNS = req.params.CNS;
+        const { name, birthdate, email, phone, password, sex } = req.body;
 
-        const user = await User.findByIdAndUpdate(
-            req.params.id,
-            {
-                CNS,
-                name,
-                birthdate,
-                email,
-                phone,
-                password,
-                sex,
-            },
-            { new: true, runValidators: true }
-        );
+        // checking if user exists
+        const userExists = await User.findOne({ CNS }).exec();
 
-        if (!user) {
-            console.error("<!> Usuário não encontrado com id:", req.params.id);
+        if (!userExists) {
+            kafkaLog(
+                "update/user",
+                {
+                    error: "Can't update user because it doesn't exist.",
+                    data: {
+                        CNS,
+                        name,
+                        birthdate,
+                        email,
+                        phone,
+                        password,
+                    },
+                },
+                `Error: Can't update user because it doesn't exist.`
+            );
             return res.status(404).send({ error: "Usuário não encontrado" });
         }
 
-        await sendMessageToKafka("user_updated", user);
+        const taskData = await createTask("update/user", {
+            CNS,
+            name,
+            birthdate,
+            email,
+            phone,
+            password,
+        });
 
-        console.log("<$> Usuário atualizado:", user);
-        res.status(200).send(user);
+        res.status(200).send(taskData);
     } catch (error) {
         console.error("<!> Erro ao atualizar usuário:", error);
         res.status(400).send(error);
@@ -101,21 +111,29 @@ router.put("/user/:id", async (req, res) => {
 });
 
 // DELETE /user/:id - Deletar um usuário específico
-router.delete("/user/:id", async (req, res) => {
-    console.log("# [DELETE] /user/:id");
+router.delete("/user/:CNS", async (req, res) => {
+    console.log("# [DELETE] /user/:CNS");
 
     try {
-        const user = await User.findByIdAndDelete(req.params.id);
+        const CNS = req.params.CNS;
 
-        if (!user) {
-            console.error("<!> Usuário não encontrado com id:", req.params.id);
+        const userExists = await User.findOne({ CNS }).exec();
+        
+        if (!userExists) {
+            kafkaLog(
+                "delete/user",
+                {
+                    error: "Can't delete user because it doesn't exist.",
+                    data: { CNS },
+                },
+                `Error: Can't delete user because it doesn't exist.`
+            );
             return res.status(404).send({ error: "Usuário não encontrado" });
         }
 
-        await sendMessageToKafka("user_deleted", user);
+        const taskData = await createTask("delete/user", { CNS });
 
-        console.log("<$> Usuário deletado:", user);
-        res.status(200).send(user);
+        res.status(200).send(taskData);
     } catch (error) {
         console.error("<!> Erro ao deletar usuário:", error);
         res.status(400).send(error);

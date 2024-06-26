@@ -35,7 +35,7 @@ services:
             - kafka
         environment:
             - NAME=portal-0
-            - MONGO_URI=mongodb://mongo:27017
+            - MONGO_URI=mongodb://mongo:27017/db
 
     consumer:
         build:
@@ -47,5 +47,5 @@ services:
             - portal
         environment:
             - NAME=consumer-0
-            - MONGO_URI=mongodb://mongo:27017
+            - MONGO_URI=mongodb://mongo:27017/db
 

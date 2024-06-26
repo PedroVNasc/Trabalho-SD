@@ -1,6 +1,6 @@
 // Importing important modules
 import mongoose from 'mongoose';
-import { NAME, MONGO_URI } from './constants';
+import { NAME, MONGO_URI } from './config/constants';
 
 // Connecting to MongoDB
 mongoose.connect(MONGO_URI);

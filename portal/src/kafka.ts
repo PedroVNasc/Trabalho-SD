@@ -1,8 +1,10 @@
 // Importing important modules
 import { Kafka } from "kafkajs";
-import topics from "./topics";
+import topics from "./config/topics";
 import { v4 as uuidv4 } from "uuid";
-import { NAME } from "./constants";
+import { NAME } from "./config/constants";
+import { error } from "console";
+import { conlog } from "./utils/utils";
 
 // Creating a Kafka instance
 const kafka = new Kafka({
@@ -44,9 +46,29 @@ export const connect2Kafka = async () => {
 };
 
 // Function to send messages to Kafka
-export const sendMessageToKafka = async (topic: string, message: object) => {
+export const sendToKafka = async (topic: string, message: object[]) => {
     await producer.send({
         topic,
         messages: [{ key: uuidv4(), value: JSON.stringify(message) }],
     });
+};
+
+export const kafkaLog = async (
+    action: string,
+    data: any,
+    message?: string,
+    isErr?: boolean
+) => {
+    await sendToKafka("sus-log", [
+        {
+            action,
+            message,
+            data: JSON.stringify(data),
+            timestamp: new Date().toISOString(),
+            handler: NAME,
+            isErr: isErr ?? false,
+        },
+    ]);
+
+    conlog(`Logged${isErr ? "[ERROR]" : ""}: ${action} - ${message}`, data);
 };

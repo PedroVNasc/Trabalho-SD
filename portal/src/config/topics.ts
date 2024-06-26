@@ -6,7 +6,17 @@ const topics = [
         replicationFactor: 1,
     },
     {
+        topic: "sus-errors",
+        numPartitions: 1,
+        replicationFactor: 1,
+    },
+    {
         topic: "user-created",
+        numPartitions: 1,
+        replicationFactor: 1,
+    },
+    {
+        topic: "sus-tasks",
         numPartitions: 1,
         replicationFactor: 1,
     },
