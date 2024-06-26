@@ -49,3 +49,11 @@ services:
             - NAME=consumer-0
             - MONGO_URI=mongodb://mongo:27017/db
 
+    data-populator:
+        build:
+            context: ./populate
+            dockerfile: Dockerfile
+        depends_on:
+            - mongo
+            - portal
+            - consumer

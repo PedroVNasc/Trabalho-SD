@@ -1,0 +1,200 @@
+{
+    "users": [
+        {
+            "CNS": "123456789001",
+            "name": "John Doe",
+            "birthdate": "1980-01-01",
+            "email": "john.doe@example.com",
+            "phone": "1234567890",
+            "password": "securepassword",
+            "sex": "M"
+        },
+        {
+            "CNS": "123456789002",
+            "name": "Jane Doe",
+            "birthdate": "1985-05-05",
+            "email": "jane.doe@example.com",
+            "phone": "0987654321",
+            "password": "securepassword",
+            "sex": "F"
+        }
+    ],
+    "doctors": [
+        {
+            "id": "doc001",
+            "name": "Dr. Smith",
+            "email": "dr.smith@example.com",
+            "phone": "1234567890",
+            "address": "123 Main St",
+            "city": "Somewhere",
+            "state": "State",
+            "zipCode": "12345",
+            "specialty": "Cardiology",
+            "licenseNumber": "LIC001",
+            "clinic": "60d0fe4f5311236168a109ca"
+        },
+        {
+            "id": "doc002",
+            "name": "Dr. Brown",
+            "email": "dr.brown@example.com",
+            "phone": "0987654321",
+            "address": "456 Elm St",
+            "city": "Anywhere",
+            "state": "State",
+            "zipCode": "54321",
+            "specialty": "Neurology",
+            "licenseNumber": "LIC002",
+            "clinic": "60d0fe4f5311236168a109cb"
+        }
+    ],
+    "clinics": [
+        {
+            "id": "clinic001",
+            "region": "North",
+            "name": "North Clinic",
+            "address": "789 Oak St",
+            "users": ["60d0fe4f5311236168a109c1", "60d0fe4f5311236168a109c2"]
+        },
+        {
+            "id": "clinic002",
+            "region": "South",
+            "name": "South Clinic",
+            "address": "101 Pine St",
+            "users": ["60d0fe4f5311236168a109c3", "60d0fe4f5311236168a109c4"]
+        }
+    ],
+    "pharmacies": [
+        {
+            "id": "pharm001",
+            "region": "East",
+            "name": "East Pharmacy",
+            "address": "202 Maple St",
+            "medicines": [
+                {
+                    "id": "med001",
+                    "name": "Aspirin",
+                    "genericName": "Acetylsalicylic Acid",
+                    "brandName": "Bayer",
+                    "dosageForm": "Tablet",
+                    "strength": "500 mg",
+                    "manufacturer": "Bayer",
+                    "expiryDate": "2023-12-31",
+                    "batchNumber": "B001",
+                    "indications": ["Pain", "Fever"],
+                    "price": 10.0,
+                    "prescriptionRequired": false,
+                    "quantity": 100
+                },
+                {
+                    "id": "med002",
+                    "name": "Tylenol",
+                    "genericName": "Acetaminophen",
+                    "brandName": "Tylenol",
+                    "dosageForm": "Tablet",
+                    "strength": "500 mg",
+                    "manufacturer": "Johnson & Johnson",
+                    "expiryDate": "2023-11-30",
+                    "batchNumber": "B002",
+                    "indications": ["Pain", "Fever"],
+                    "price": 15.0,
+                    "prescriptionRequired": false,
+                    "quantity": 200
+                }
+            ]
+        },
+        {
+            "id": "pharm002",
+            "region": "West",
+            "name": "West Pharmacy",
+            "address": "303 Birch St",
+            "medicines": [
+                {
+                    "id": "med003",
+                    "name": "Lipitor",
+                    "genericName": "Atorvastatin",
+                    "brandName": "Lipitor",
+                    "dosageForm": "Tablet",
+                    "strength": "20 mg",
+                    "manufacturer": "Pfizer",
+                    "expiryDate": "2024-01-31",
+                    "batchNumber": "B003",
+                    "indications": ["Cholesterol"],
+                    "price": 30.0,
+                    "prescriptionRequired": true,
+                    "quantity": 150
+                },
+                {
+                    "id": "med004",
+                    "name": "Metformin",
+                    "genericName": "Metformin Hydrochloride",
+                    "brandName": "Glucophage",
+                    "dosageForm": "Tablet",
+                    "strength": "500 mg",
+                    "manufacturer": "Merck",
+                    "expiryDate": "2024-06-30",
+                    "batchNumber": "B004",
+                    "indications": ["Diabetes"],
+                    "price": 20.0,
+                    "prescriptionRequired": true,
+                    "quantity": 120
+                }
+            ]
+        }
+    ],
+    "pharmacists": [
+        {
+            "id": "pharm001",
+            "region": "East",
+            "name": "Pharmacist One",
+            "address": "202 Maple St",
+            "phone": "1234567890",
+            "email": "pharm.one@example.com",
+            "licenseNumber": "PHARM001",
+            "pharmacyId": "60d0fe4f5311236168a109cc"
+        },
+        {
+            "id": "pharm002",
+            "region": "West",
+            "name": "Pharmacist Two",
+            "address": "303 Birch St",
+            "phone": "0987654321",
+            "email": "pharm.two@example.com",
+            "licenseNumber": "PHARM002",
+            "pharmacyId": "60d0fe4f5311236168a109cd"
+        }
+    ],
+    "prescriptions": [
+        {
+            "id": "presc001",
+            "medicine": "60d0fe4f5311236168a109d1",
+            "patient": "60d0fe4f5311236168a109c1",
+            "doctor": "60d0fe4f5311236168a109d2"
+        },
+        {
+            "id": "presc002",
+            "medicine": "60d0fe4f5311236168a109d3",
+            "patient": "60d0fe4f5311236168a109c2",
+            "doctor": "60d0fe4f5311236168a109d4"
+        }
+    ],
+    "prescriptionRequests": [
+        {
+            "prescription": "60d0fe4f5311236168a109e1",
+            "approved": true,
+            "readiness": "Ready",
+            "pharmacist": "60d0fe4f5311236168a109cc",
+            "requestDate": "2022-01-01",
+            "deliveryDate": "2022-01-02",
+            "status": "Delivered"
+        },
+        {
+            "prescription": "60d0fe4f5311236168a109e2",
+            "approved": false,
+            "readiness": "Pending",
+            "pharmacist": "60d0fe4f5311236168a109cd",
+            "requestDate": "2022-02-01",
+            "deliveryDate": "2022-02-02",
+            "status": "Pending"
+        }
+    ]
+}
